@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+
+import re
+import subprocess
+from gradelib import *
+
+import os
+os.system("make clean")
+
+
+r = Runner(save("xv6.out"))
+
+@test(20, "test1")
+def test_uthread():
+    r.run_qemu(shell_script([
+        'test1'
+    ]))
+    
+    print(123)
+    if not re.findall("9f58dde5bfcf5c52fa399fad82e0dafb0e381585c6e2b361bde16fa94c6d2807 1", r.qemu.output, re.M):
+        raise AssertionError('Output does not match expected output')
+
+    if not re.findall("9f58dde5bfcf5c52fa399fad82e0dafb0e381585c6e2b361bde16fa94c6d2807 2", r.qemu.output, re.M):
+        raise AssertionError('Output does not match expected output')
+
+    if not re.findall("9f58dde5bfcf5c52fa399fad82e0dafb0e381585c6e2b361bde16fa94c6d2807 3", r.qemu.output, re.M):
+        raise AssertionError('Output does not match expected output')
+
+run_tests()
+
+os.system("make clean")

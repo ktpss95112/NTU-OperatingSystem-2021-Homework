@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+
+import re
+import subprocess
+from gradelib import *
+
+import os
+os.system("make clean")
+
+r = Runner(save("xv6.out"))
+
+@test(20, "task1")
+def test_uthread():
+    r.run_qemu(shell_script([
+        'task1'
+    ]))
+    expected = ['thread id 2 exec (15|14|16) ticks', 'thread id 3 exec (30|31|29) ticks', 'thread id 1 exec (45|44|46) ticks']
+    if not re.findall('\n'.join(expected), r.qemu.output, re.M):
+        raise AssertionError('Output does not match expected output')
+
+@test(20, "task2")
+def test_uthread():
+    r.run_qemu(shell_script([
+        'task2'
+    ]))
+    expected = ['thread id 2 exec (17|18|16) ticks', 'thread id 1 exec (30|29|31) ticks', 'thread id 3 exec (28|29|27) ticks']
+    if not re.findall('\n'.join(expected), r.qemu.output, re.M):
+        raise AssertionError('Output does not match expected output')
+
+
+@test(20, "task3")
+def test_uthread():
+    r.run_qemu(shell_script([
+        'task3'
+    ]))
+    expected = ['thread id 1 exec (9|10|8) ticks', 'thread id 3 exec (19|20|18) ticks', 'thread id 2 exec (24|23|25) ticks']
+    if not re.findall('\n'.join(expected), r.qemu.output, re.M):
+        raise AssertionError('Output does not match expected output')
+
+run_tests()
+
+os.system("make clean")
